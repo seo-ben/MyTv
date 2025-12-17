@@ -1,0 +1,68 @@
+import 'package:restart_app/restart_app.dart';
+
+import '../backend/model/common/maintenance_model.dart';
+import 'basic_screen_imports.dart';
+
+class SystemMaintenanceController extends GetxController {
+  RxBool maintenanceStatus = false.obs;
+}
+
+class MaintenanceDialog {
+  show({required MaintenanceModel maintenanceModel}) {
+    Get.dialog(
+      // ignore: deprecated_member_use
+      WillPopScope(
+        onWillPop: () async {
+          Restart.restartApp();
+          return false;
+        },
+        child: Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Get.isDarkMode
+                ? CustomColor.primaryDarkScaffoldBackgroundColor
+                : CustomColor.primaryLightScaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingHorizontalSize * 0.8,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingVerticalSize * 0.5,
+                  ),
+                  child: Image.network(
+                    "${maintenanceModel.data.baseUrl}/${maintenanceModel.data.imagePath}/${maintenanceModel.data.image}",
+                  ),
+                ),
+                TitleHeading3Widget(
+                  text: maintenanceModel.data.title,
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingVerticalSize * 0.5,
+                  ),
+                  child: TitleHeading4Widget(
+                    text: maintenanceModel.data.details,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                PrimaryButton(
+                  title: Strings.restart,
+                  onPressed: () {
+                    Restart.restartApp();
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+}

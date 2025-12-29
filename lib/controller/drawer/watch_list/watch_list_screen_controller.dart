@@ -3,6 +3,7 @@ import '/backend/model/details/category_details_model.dart';
 import '../../../backend/model/common/common_success_model.dart';
 import '../../../backend/model/drawer/watch_list/watch_list_model.dart';
 import '../../../backend/services/video/video_services.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 import '../../../backend/utils/api_method.dart';
 import '../../../utils/basic_screen_imports.dart';
 import '../../../views/video_player_screen.dart';
@@ -28,14 +29,16 @@ class WatchListScreenController extends GetxController {
   Future<WatchListModel> getProfileInfoProcess() async {
     _isLoading.value = true;
     update();
-    await VideoServices.getWatchListVideoApi().then((value) {
-      _watchListModel = value!;
+    await VideoServices.getWatchListVideoApi()
+        .then((value) {
+          _watchListModel = value!;
 
-      _isLoading.value = false;
-      update();
-    }).catchError((onError) {
-      log.e(onError);
-    });
+          _isLoading.value = false;
+          update();
+        })
+        .catchError((onError) {
+          log.e(onError);
+        });
 
     _isLoading.value = false;
     update();
@@ -55,34 +58,45 @@ class WatchListScreenController extends GetxController {
   Future<CategoryDetailsModel> getDetailsProcess(String id) async {
     _isDetailsLoading.value = true;
     update();
-    await VideoServices.getWatchListApi(id).then((value) {
-      _watchListDetailsModel = value!;
-      var data = _watchListDetailsModel.data;
-      if (data.link.contains("youtube")) {
-        debugPrint("🔴🟠🟢🔵🟣 ${data.link}");
-        Get.to(YoutubeVideoPlayer(
-          url: data.link,
-          name: data.name,
-          title: data.title,
-          description: data.description,
-          id: data.id.toString(),
-        ));
-      } else {
-        debugPrint("🔴🟠🟢🔵🟣 ${data.link}");
-        Get.to(
-          VideoPlayerScreen(
-              url: data.link,
-              name: data.name,
-              title: data.title,
-              description: data.description,
-              id: data.id.toString()),
-        );
-      }
-      _isDetailsLoading.value = false;
-      update();
-    }).catchError((onError) {
-      log.e(onError);
-    });
+    await VideoServices.getWatchListApi(id)
+        .then((value) {
+          _watchListDetailsModel = value!;
+          var data = _watchListDetailsModel.data;
+          if (data.link.contains("youtube")) {
+            debugPrint("🔴🟠🟢🔵🟣 ${data.link}");
+            Get.to(
+              YoutubeVideoPlayer(
+                url: data.link,
+                name: data.name,
+                title: data.title,
+                description: data.description,
+                id: normalizeAndLogId(
+                  data.id,
+                  source: 'watch_list_screen_controller',
+                ),
+              ),
+            );
+          } else {
+            debugPrint("🔴🟠🟢🔵🟣 ${data.link}");
+            Get.to(
+              VideoPlayerScreen(
+                url: data.link,
+                name: data.name,
+                title: data.title,
+                description: data.description,
+                id: normalizeAndLogId(
+                  data.id,
+                  source: 'watch_list_screen_controller',
+                ),
+              ),
+            );
+          }
+          _isDetailsLoading.value = false;
+          update();
+        })
+        .catchError((onError) {
+          log.e(onError);
+        });
 
     _isDetailsLoading.value = false;
     update();
@@ -106,13 +120,14 @@ class WatchListScreenController extends GetxController {
 
     await VideoServices.watchListDeleteApi(body: inputBody, id: id)
         .then((value) {
-      _watchListDeleteModel = value!;
-      getProfileInfoProcess();
-      _isDeleteLoading.value = false;
-      update();
-    }).catchError((onError) {
-      log.e(onError);
-    });
+          _watchListDeleteModel = value!;
+          getProfileInfoProcess();
+          _isDeleteLoading.value = false;
+          update();
+        })
+        .catchError((onError) {
+          log.e(onError);
+        });
     _isDeleteLoading.value = false;
     update();
     return _watchListDeleteModel;

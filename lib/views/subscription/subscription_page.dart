@@ -112,7 +112,9 @@ class SubscriptionPage extends StatelessWidget {
                           TitleHeading5Widget(text: Strings.renewable),
                           TitleHeading4Widget(
                             fontSize: Dimensions.headingTextSize3,
-                            text: data[index].duration,
+                            text: data[index].duration
+                                .replaceAll('months', 'Mois')
+                                .replaceAll('month', 'Mois'),
                             fontWeight: FontWeight.w500,
                           ),
                         ],

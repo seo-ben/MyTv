@@ -1,6 +1,7 @@
 import 'package:MyTelevision/controller/navbar/dashboard/dashboard_controller.dart';
 
 import '../../controller/drawer/recent_views/recent_views_controller.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 import '/backend/services/api_endpoint.dart';
 import '/backend/utils/custom_loading_api.dart';
 import '../../utils/basic_screen_imports.dart';
@@ -49,9 +50,14 @@ class RecentViewsScreen extends StatelessWidget {
                 onTap: () {
                   if (data[index].slug.isNotEmpty) {
                     //
-                    controller.getDetailsProcess2(data[index].slug);
+                    controller.getDetailsProcess(data[index].slug);
                   } else {
-                    controller.getDetailsProcess(data[index].id.toString());
+                    controller.getDetailsProcess(
+                      normalizeAndLogId(
+                        data[index].id,
+                        source: 'recent_views_screen#getDetails',
+                      ),
+                    );
                   }
                 },
                 child: Stack(
@@ -108,7 +114,10 @@ class RecentViewsScreen extends StatelessWidget {
                               controller.getDetailsProcess2(data[index].slug);
                             } else {
                               controller.getDetailsProcess(
-                                data[index].id.toString(),
+                                normalizeAndLogId(
+                                  data[index].id,
+                                  source: 'recent_views_screen#onTap',
+                                ),
                               );
                             }
                           },

@@ -14,33 +14,26 @@ import 'language/language_controller.dart';
 import 'utils/theme.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class DeviceInfo {
-  static bool isTv = false;
-}
-
-Future<void> checkAndSetIsAndroidTV() async {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  AndroidDeviceInfo androidInfo;
-  try {
-    androidInfo = await deviceInfo.androidInfo;
-    DeviceInfo.isTv = androidInfo.systemFeatures.contains(
-      'android.software.leanback',
-    );
-  } catch (e) {
-    DeviceInfo.isTv = false;
-  }
-}
+import 'package:MyTelevision/utils/device_info.dart';
+import '/controller/custom_ad_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
   await checkAndSetIsAndroidTV();
+
+  if (DeviceInfo.isTv) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  } else {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
   AdMobHelper.initialization();
 
   // CRITIQUE: Initialiser GetStorage AVANT tout
@@ -102,8 +95,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 📺 TV Design Size: 960x540 (Standard 1080p scaled down or 1920x1080)
+    // vs 📱 Mobile Design Size: 414x896
+    Size designSize = DeviceInfo.isTv
+        ? const Size(960, 540)
+        : const Size(414, 896);
+
     return ScreenUtilInit(
-      designSize: const Size(414, 896),
+      designSize: designSize,
       builder: (_, child) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.light,
@@ -113,6 +112,7 @@ class MyApp extends StatelessWidget {
           Get.put(BasicSettingsController(), permanent: true);
           Get.put(SystemMaintenanceController());
           Get.put(LanguageController(), permanent: true);
+          Get.put(CustomAdController(), permanent: true);
         }),
         navigatorKey: Get.key,
         // Utiliser AppSplashScreen comme écran initial

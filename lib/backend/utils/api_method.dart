@@ -17,8 +17,12 @@ final log = logger(ApiMethod);
 
 Map<String, String> basicHeaderInfo() {
   return {
-    HttpHeaders.acceptHeader: "application/json",
+    HttpHeaders.acceptHeader: "application/json, text/plain, */*",
     HttpHeaders.contentTypeHeader: "application/json",
+    HttpHeaders.acceptLanguageHeader: "en-US,en;q=0.9,fr;q=0.8",
+    HttpHeaders.userAgentHeader:
+        "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    "X-Requested-With": "XMLHttpRequest",
   };
 }
 
@@ -26,8 +30,12 @@ Future<Map<String, String>> bearerHeaderInfo() async {
   String? accessToken = LocalStorage.getToken();
 
   Map<String, String> headers = {
-    HttpHeaders.acceptHeader: "application/json",
+    HttpHeaders.acceptHeader: "application/json, text/plain, */*",
     HttpHeaders.contentTypeHeader: "application/json",
+    HttpHeaders.acceptLanguageHeader: "en-US,en;q=0.9,fr;q=0.8",
+    HttpHeaders.userAgentHeader:
+        "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    "X-Requested-With": "XMLHttpRequest",
   };
 
   if (accessToken != null && accessToken.isNotEmpty) {
@@ -93,20 +101,32 @@ class ApiMethod {
       _maintenanceCheck(isMaintenance, response.body);
 
       if (response.statusCode == code) {
-        return jsonDecode(response.body);
+        return _safeDecode(response.body);
       } else {
         log.e('🐞🐞🐞 Error Alert On Status Code 🐞🐞🐞');
 
-        log.e(
-          'unknown error hitted in status code${jsonDecode(response.body)}',
-        );
+        log.e('unknown error hitted in status code ${response.body}');
 
-        ErrorResponse res = ErrorResponse.fromJson(jsonDecode(response.body));
-        if (isMaintenance) {
-        } else {
-          if (isNotStream) {
-            CustomSnackBar.error(res.message.error.join(''));
+        final decoded = _safeDecode(response.body);
+        if (decoded != null) {
+          try {
+            ErrorResponse res = ErrorResponse.fromJson(decoded);
+            if (isMaintenance) {
+            } else {
+              if (isNotStream) {
+                CustomSnackBar.error(res.message.error.join(''));
+              }
+            }
+          } catch (e) {
+            log.e('Error parsing error response: $e');
+            if (!isMaintenance && isNotStream)
+              CustomSnackBar.error(decoded.toString());
           }
+        } else {
+          // Unexpected error body format (e.g., list or non-json)
+          log.e('Unexpected error body format or non-json: ${response.body}');
+          if (!isMaintenance && isNotStream)
+            CustomSnackBar.error(response.body.toString());
         }
 
         return null;
@@ -202,17 +222,27 @@ class ApiMethod {
       }
 
       if (response.statusCode == code) {
-        return jsonDecode(response.body);
+        return _safeDecode(response.body);
       } else {
         log.e('🐞🐞🐞 Error Alert On Status Code 🐞🐞🐞');
 
-        log.e(
-          'unknown error hitted in status code ${jsonDecode(response.body)}',
-        );
+        log.e('unknown error hitted in status code ${response.body}');
 
-        ErrorResponse res = ErrorResponse.fromJson(jsonDecode(response.body));
-
-        if (!isMaintenance) CustomSnackBar.error(res.message.error.join(''));
+        final decoded = _safeDecode(response.body);
+        if (decoded != null) {
+          try {
+            ErrorResponse res = ErrorResponse.fromJson(decoded);
+            if (!isMaintenance)
+              CustomSnackBar.error(res.message.error.join(''));
+          } catch (e) {
+            log.e('Error parsing error response: $e');
+            if (!isMaintenance) CustomSnackBar.error(decoded.toString());
+          }
+        } else {
+          // Unexpected error body format (e.g., list or non-json)
+          log.e('Unexpected error body format or non-json: ${response.body}');
+          if (!isMaintenance) CustomSnackBar.error(response.body.toString());
+        }
 
         return null;
       }
@@ -297,17 +327,28 @@ class ApiMethod {
       _maintenanceCheck(isMaintenance, jsonData);
 
       if (response.statusCode == code) {
-        return jsonDecode(jsonData.body) as Map<String, dynamic>;
+        return _safeDecode(jsonData.body);
       } else {
         log.e('🐞🐞🐞 Error Alert On Status Code 🐞🐞🐞');
 
-        log.e(
-          'unknown error hitted in status code ${jsonDecode(jsonData.body)}',
-        );
+        log.e('unknown error hitted in status code ${jsonData.body}');
 
-        ErrorResponse res = ErrorResponse.fromJson(jsonDecode(jsonData.body));
-
-        if (!isMaintenance) CustomSnackBar.error(res.message.error.toString());
+        final decoded = _safeDecode(jsonData.body);
+        if (decoded != null) {
+          try {
+            ErrorResponse res = ErrorResponse.fromJson(decoded);
+            if (!isMaintenance)
+              CustomSnackBar.error(res.message.error.toString());
+          } catch (e) {
+            log.e('Error parsing multipart error response: $e');
+            if (!isMaintenance) CustomSnackBar.error(decoded.toString());
+          }
+        } else {
+          log.e(
+            'Unexpected multipart error body format or non-json: ${jsonData.body}',
+          );
+          if (!isMaintenance) CustomSnackBar.error(jsonData.body.toString());
+        }
 
         return null;
       }
@@ -405,17 +446,28 @@ class ApiMethod {
       _maintenanceCheck(isMaintenance, jsonData);
 
       if (response.statusCode == code) {
-        return jsonDecode(jsonData.body) as Map<String, dynamic>;
+        return _safeDecode(jsonData.body);
       } else {
         log.e('🐞🐞🐞 Error Alert On Status Code 🐞🐞🐞');
 
-        log.e(
-          'unknown error hitted in status code ${jsonDecode(jsonData.body)}',
-        );
+        log.e('unknown error hitted in status code ${jsonData.body}');
 
-        ErrorResponse res = ErrorResponse.fromJson(jsonDecode(jsonData.body));
-
-        if (!isMaintenance) CustomSnackBar.error(res.message.error.toString());
+        final decoded = _safeDecode(jsonData.body);
+        if (decoded != null) {
+          try {
+            ErrorResponse res = ErrorResponse.fromJson(decoded);
+            if (!isMaintenance)
+              CustomSnackBar.error(res.message.error.toString());
+          } catch (e) {
+            log.e('Error parsing multipart error response: $e');
+            if (!isMaintenance) CustomSnackBar.error(decoded.toString());
+          }
+        } else {
+          log.e(
+            'Unexpected multipart error body format or non-json: ${jsonData.body}',
+          );
+          if (!isMaintenance) CustomSnackBar.error(jsonData.body.toString());
+        }
 
         // CustomSnackBar.error(
         //     jsonDecode(response.body)['message']['error'].toString());
@@ -516,9 +568,20 @@ class ApiMethod {
           'unknown error hitted in status code ${jsonDecode(response.body)}',
         );
 
-        ErrorResponse res = ErrorResponse.fromJson(jsonDecode(response.body));
-
-        if (!isMaintenance) CustomSnackBar.error(res.message.error.join(''));
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          try {
+            ErrorResponse res = ErrorResponse.fromJson(decoded);
+            if (!isMaintenance)
+              CustomSnackBar.error(res.message.error.join(''));
+          } catch (e) {
+            log.e('Error parsing delete error response: $e');
+            if (!isMaintenance) CustomSnackBar.error(decoded.toString());
+          }
+        } else {
+          log.e('Unexpected delete error body format: $decoded');
+          if (!isMaintenance) CustomSnackBar.error(decoded.toString());
+        }
 
         return null;
       }
@@ -548,12 +611,35 @@ class ApiMethod {
   void _maintenanceCheck(bool isMaintenance, var jsonData) {
     if (isMaintenance) {
       Get.find<SystemMaintenanceController>().maintenanceStatus.value = true;
-      MaintenanceModel maintenanceModel = MaintenanceModel.fromJson(
-        jsonDecode(jsonData),
-      );
-      MaintenanceDialog().show(maintenanceModel: maintenanceModel);
+      try {
+        final decoded = jsonDecode(
+          jsonData is http.Response ? jsonData.body : jsonData.toString(),
+        );
+        MaintenanceModel maintenanceModel = MaintenanceModel.fromJson(decoded);
+        MaintenanceDialog().show(maintenanceModel: maintenanceModel);
+      } catch (e) {
+        log.e('Error parsing maintenance response: $e');
+      }
     } else {
       Get.find<SystemMaintenanceController>().maintenanceStatus.value = false;
+    }
+  }
+
+  Map<String, dynamic>? _safeDecode(String body) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      } else if (decoded is Map) {
+        return Map<String, dynamic>.from(decoded);
+      } else {
+        log.e('Expected Map but got ${decoded.runtimeType}: $decoded');
+        return null;
+      }
+    } catch (e) {
+      log.e('Failed to decode JSON: $e');
+      log.e('Body was: $body');
+      return null;
     }
   }
 }

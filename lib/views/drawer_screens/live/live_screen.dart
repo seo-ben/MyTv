@@ -4,8 +4,8 @@ import '/views/youtube_video_player_screen.dart';
 import '../../../controller/drawer/live_screen/live_screen_controller.dart';
 import '../../../utils/basic_screen_imports.dart';
 import '../../video_player_screen.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../../../admob/admob_helper.dart';
+import '../../../widgets/ads/unified_banner_ad_widget.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 
 class LiveScreen extends StatelessWidget {
   LiveScreen({super.key});
@@ -67,7 +67,10 @@ class LiveScreen extends StatelessWidget {
                               name: data[index].name,
                               title: data[index].title,
                               description: data[index].description,
-                              id: data[index].id.toString(),
+                              id: normalizeAndLogId(
+                                data[index].id,
+                                source: 'live_screen',
+                              ),
                             ),
                           );
                         } else {
@@ -78,7 +81,10 @@ class LiveScreen extends StatelessWidget {
                               name: data[index].name,
                               title: data[index].title,
                               description: data[index].description,
-                              id: data[index].id.toString(),
+                              id: normalizeAndLogId(
+                                data[index].id,
+                                source: 'live_screen',
+                              ),
                             ),
                           );
                         }
@@ -140,7 +146,10 @@ class LiveScreen extends StatelessWidget {
                                         name: data[index].name,
                                         title: data[index].title,
                                         description: data[index].description,
-                                        id: data[index].id.toString(),
+                                        id: normalizeAndLogId(
+                                          data[index].id,
+                                          source: 'live_screen',
+                                        ),
                                       ),
                                     );
                                   } else {
@@ -153,7 +162,10 @@ class LiveScreen extends StatelessWidget {
                                         name: data[index].name,
                                         title: data[index].title,
                                         description: data[index].description,
-                                        id: data[index].id.toString(),
+                                        id: normalizeAndLogId(
+                                          data[index].id,
+                                          source: 'live_screen',
+                                        ),
                                       ),
                                     );
                                   }
@@ -174,7 +186,7 @@ class LiveScreen extends StatelessWidget {
                     mainAxisSpacing: 15.h,
                   ),
                 ),
-                // showAdd(context),
+                showAdd(context),
               ],
             ),
           );
@@ -187,13 +199,7 @@ class LiveScreen extends StatelessWidget {
         right: Dimensions.paddingHorizontalSize * .6,
         top: Dimensions.paddingVerticalSize * .5,
       ),
-      child: SizedBox(
-        height: 50,
-        child: AdWidget(
-          ad: AdMobHelper.getBannerAd()..load(),
-          key: UniqueKey(),
-        ),
-      ),
+      child: const UnifiedBannerAdWidget(),
     );
   }
 }

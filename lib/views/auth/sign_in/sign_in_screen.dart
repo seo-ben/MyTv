@@ -4,6 +4,8 @@ import '../../../controller/auth/sign_in/sign_in_controller.dart';
 import '../../../custom_assets/assets.gen.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/basic_screen_imports.dart';
+import '../../../utils/device_info.dart';
+import '../../../widgets/tv/focusable_widget.dart';
 import '../../../widgets/inputs/password_input_widget.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -115,13 +117,17 @@ class SignInScreen extends StatelessWidget {
             textInputAction: TextInputAction.done,
           ),
           SizedBox(height: Dimensions.heightSize * .5),
-          InkWell(
-            onTap: () {
+          FocusableWidget(
+            onPressed: () {
               Get.toNamed(Routes.forgotPasswordScreen);
             },
-            child: TitleHeading5Widget(
-              text: Strings.forgetPassword,
-              color: CustomColor.primaryLightColor, // Keep accent color
+            borderRadius: BorderRadius.circular(Dimensions.radius * 0.5),
+            child: Padding(
+              padding: EdgeInsets.all(Dimensions.widthSize * 0.5),
+              child: TitleHeading5Widget(
+                text: Strings.forgetPassword,
+                color: CustomColor.primaryLightColor, // Keep accent color
+              ),
             ),
           ),
           SizedBox(height: Dimensions.heightSize * 2),
@@ -136,8 +142,13 @@ class SignInScreen extends StatelessWidget {
         Obx(
           () => controller.isLoading
               ? const CustomLoadingAPI()
-              : SizedBox(
-                  width: double.infinity,
+              : FocusableWidget(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      controller.signInProcess();
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(Dimensions.radius),
                   child: PrimaryButton(
                     title: Strings.loginNow,
                     onPressed: () {
@@ -145,9 +156,24 @@ class SignInScreen extends StatelessWidget {
                         controller.signInProcess();
                       }
                     },
-                    // Apply button style tweaks if needed
                   ),
                 ),
+        ),
+        verticalSpace(Dimensions.heightSize * 1.5),
+
+        // Added Guest Access button for Google Review and TV users
+        FocusableWidget(
+          onPressed: () {
+            Get.offAllNamed(Routes.bottomNavBar);
+          },
+          borderRadius: BorderRadius.circular(Dimensions.radius),
+          child: PrimaryButton(
+            title: "Guest Access",
+            buttonColor: CustomColor.whiteColor.withOpacity(0.1),
+            onPressed: () {
+              Get.offAllNamed(Routes.bottomNavBar);
+            },
+          ),
         ),
         verticalSpace(Dimensions.heightSize * 2),
         Row(
@@ -158,14 +184,18 @@ class SignInScreen extends StatelessWidget {
               color: Colors.white.withOpacity(0.8),
             ),
             horizontalSpace(Dimensions.widthSize * .5),
-            InkWell(
-              onTap: () {
+            FocusableWidget(
+              onPressed: () {
                 Get.toNamed(Routes.signUpScreen);
               },
-              child: TitleHeading5Widget(
-                text: Strings.registerNow,
-                color: CustomColor.primaryLightColor,
-                fontWeight: FontWeight.bold,
+              borderRadius: BorderRadius.circular(Dimensions.radius * 0.5),
+              child: Padding(
+                padding: EdgeInsets.all(Dimensions.widthSize * 0.5),
+                child: TitleHeading5Widget(
+                  text: Strings.registerNow,
+                  color: CustomColor.primaryLightColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

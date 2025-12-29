@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../language/language_controller.dart';
 import '../../utils/custom_style.dart';
+import '../../utils/device_info.dart';
 
 class TitleHeading4Widget extends StatelessWidget {
   TitleHeading4Widget({
@@ -31,6 +32,16 @@ class TitleHeading4Widget extends StatelessWidget {
   final languageController = Get.find<LanguageController>();
   @override
   Widget build(BuildContext context) {
+    // Reduce font size by 30% on TV if no custom fontSize is specified
+    final double? effectiveFontSize =
+        fontSize ??
+        (DeviceInfo.isTv
+            ? (Get.isDarkMode
+                      ? CustomStyle.darkHeading4TextStyle.fontSize
+                      : CustomStyle.lightHeading4TextStyle.fontSize)! *
+                  0.7
+            : null);
+
     return Obx(
       () => languageController.isLoading
           ? const Text('')
@@ -42,13 +53,15 @@ class TitleHeading4Widget extends StatelessWidget {
                   languageController.getTranslation(text),
                   style: Get.isDarkMode
                       ? CustomStyle.darkHeading4TextStyle.copyWith(
-                          fontSize: fontSize,
+                          fontSize: effectiveFontSize,
                           fontWeight: fontWeight,
-                          color: color)
+                          color: color,
+                        )
                       : CustomStyle.lightHeading4TextStyle.copyWith(
-                          fontSize: fontSize,
+                          fontSize: effectiveFontSize,
                           fontWeight: fontWeight,
-                          color: color),
+                          color: color,
+                        ),
                   textAlign: textAlign,
                   overflow: textOverflow,
                   maxLines: maxLines,

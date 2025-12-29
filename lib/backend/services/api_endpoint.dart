@@ -8,13 +8,15 @@ class ApiEndpoint {
   static String loginURL = '/login'.addBaseURl();
 
   //-> Forgot Password
-  static String forgotPasswordSendOtpURL = '/password/forgot/find/user'.addBaseURl();
+  static String forgotPasswordSendOtpURL = '/password/forgot/find/user'
+      .addBaseURl();
   static String forgotOtpVerifyURL = '/password/forgot/verify/code'
       .addBaseURl();
   static String resetPasswordURL = '/password/forgot/reset'.addBaseURl();
 
   static String kycSubmitURL = '/authorize/kyc/submit'.addBaseURl();
-  static String resendOtpCodeURL = '/password/forgot/resend/code?token='.addBaseCustomURl();
+  static String resendOtpCodeURL = '/password/forgot/resend/code?token='
+      .addBaseCustomURl();
 
   //-> Register
   static String registerURL = '/register'.addBaseURl();
@@ -49,7 +51,8 @@ class ApiEndpoint {
   static String twoFaOtoVerifyURL = '/authorize/google/2fa/verify'.addBaseURl();
 
   static String transactionUrl = '/user/transaction/log'.addBaseURl();
-  static String watchListAddURL = '/home/watchlist/'.addBaseCustomURl();
+    // Use the watchlist route that accepts the ID as a path parameter
+    static String watchListAddURL = '/home/watchlist/'.addBaseCustomURl();
   static String dashboardURL = "/user/dashboard".addBaseURl();
 
   ///video services
@@ -76,4 +79,9 @@ class ApiEndpoint {
   static String recentViewsURL = "/user/recent".addBaseURl();
   static String authorizeConfirm =
       "/user/add-money/payment/authorize-payment-submit".addBaseURl();
+
+  //-> Custom Advertisements
+  static String getAdvertisements = "/advertisements".addBaseURl();
+  static String recordAdView = "/advertisements/".addBaseURl(); // + {id}/view
+  static String recordAdClick = "/advertisements/".addBaseURl(); // + {id}/click
 }

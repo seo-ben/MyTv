@@ -17,8 +17,9 @@ class VideoServices {
   static Future<HighLightModel?> getHighlightsGetApi() async {
     Map<String, dynamic>? mapResponse;
     try {
-      mapResponse = await ApiMethod(isBasic: false)
-          .get(ApiEndpoint.highlightVideosURL, code: 200, showResult: true);
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).get(ApiEndpoint.highlightVideosURL, code: 200, showResult: true);
       if (mapResponse != null) {
         HighLightModel result = HighLightModel.fromJson(mapResponse);
 
@@ -26,7 +27,8 @@ class VideoServices {
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Highlights info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Highlights info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -37,8 +39,9 @@ class VideoServices {
   static Future<LiveVideoModel?> getLiveVideoGetApi() async {
     Map<String, dynamic>? mapResponse;
     try {
-      mapResponse = await ApiMethod(isBasic: false)
-          .get(ApiEndpoint.liveVideosURL, code: 200, showResult: true);
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).get(ApiEndpoint.liveVideosURL, code: 200, showResult: true);
       if (mapResponse != null) {
         LiveVideoModel result = LiveVideoModel.fromJson(mapResponse);
 
@@ -46,7 +49,8 @@ class VideoServices {
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Live Video info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Live Video info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -57,11 +61,9 @@ class VideoServices {
   static Future<WatchListModel?> getWatchListVideoApi() async {
     Map<String, dynamic>? mapResponse;
     try {
-      mapResponse = await ApiMethod(isBasic: false).get(
-        ApiEndpoint.watchListVideosURL,
-        code: 200,
-        showResult: true,
-      );
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).get(ApiEndpoint.watchListVideosURL, code: 200, showResult: true);
       if (mapResponse != null) {
         WatchListModel result = WatchListModel.fromJson(mapResponse);
 
@@ -69,7 +71,8 @@ class VideoServices {
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -86,14 +89,16 @@ class VideoServices {
         showResult: true,
       );
       if (mapResponse != null) {
-        CategoryDetailsModel result =
-            CategoryDetailsModel.fromJson(mapResponse);
+        CategoryDetailsModel result = CategoryDetailsModel.fromJson(
+          mapResponse,
+        );
 
         return result;
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -116,7 +121,8 @@ class VideoServices {
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -127,11 +133,9 @@ class VideoServices {
   static Future<SubscriptionModel?> getSubscriptionDataApi() async {
     Map<String, dynamic>? mapResponse;
     try {
-      mapResponse = await ApiMethod(isBasic: false).get(
-        ApiEndpoint.subscriptionPageURL,
-        code: 200,
-        showResult: true,
-      );
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).get(ApiEndpoint.subscriptionPageURL, code: 200, showResult: true);
       if (mapResponse != null) {
         SubscriptionModel result = SubscriptionModel.fromJson(mapResponse);
 
@@ -139,7 +143,8 @@ class VideoServices {
       }
     } catch (e) {
       log.e(
-          '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞');
+        '🐞🐞🐞 err from  Get Watch Video info process api service ==> $e 🐞🐞🐞',
+      );
       CustomSnackBar.error('Something went Wrong');
       return null;
     }
@@ -147,17 +152,25 @@ class VideoServices {
   }
 
   ///* watch list add in api services
-  static Future<CommonSuccessModel?> watchlistAddApi(
-      {required Map<String, dynamic> body, required String id}) async {
+  static Future<CommonSuccessModel?> watchlistAddApi({
+    Map<String, dynamic>? body,
+    required String id,
+  }) async {
     Map<String, dynamic>? mapResponse;
 
     try {
-      mapResponse = await ApiMethod(isBasic: false).post(
-        "${ApiEndpoint.watchListAddURL}$id?lang=${Get.find<LanguageController>().selectedLanguage.value}",
-        body,
-        code: 200,
-        showResult: true,
-      );
+      final url =
+          "${ApiEndpoint.watchListAddURL}$id?lang=${Get.find<LanguageController>().selectedLanguage.value}";
+      // Log the final request URL and body for debugging id flow
+      debugPrint('🔗 watchlistAddApi -> URL: $url');
+      debugPrint('📦 watchlistAddApi -> body: $body');
+
+      // If body is null, send an empty map so ApiMethod.post can jsonEncode safely.
+      final bodyToSend = body ?? <String, dynamic>{};
+
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).post(url, bodyToSend, code: 200, showResult: true);
       if (mapResponse != null) {
         CommonSuccessModel result = CommonSuccessModel.fromJson(mapResponse);
         CustomSnackBar.success(result.message.success.first.toString());
@@ -172,8 +185,10 @@ class VideoServices {
   }
 
   ///* watch list delete in api services
-  static Future<CommonSuccessModel?> watchListDeleteApi(
-      {required Map<String, dynamic> body, required String id}) async {
+  static Future<CommonSuccessModel?> watchListDeleteApi({
+    required Map<String, dynamic> body,
+    required String id,
+  }) async {
     Map<String, dynamic>? mapResponse;
 
     try {
@@ -195,25 +210,25 @@ class VideoServices {
     return null;
   }
 
-
   ///* Get RecentViews api services
   static Future<RecentViewsModel?> recentViewsProcessApi() async {
     Map<String, dynamic>? mapResponse;
     try {
-      mapResponse = await ApiMethod(isBasic: false).get(
-        ApiEndpoint.recentViewsURL,
-      );
+      mapResponse = await ApiMethod(
+        isBasic: false,
+      ).get(ApiEndpoint.recentViewsURL);
       if (mapResponse != null) {
         RecentViewsModel result = RecentViewsModel.fromJson(mapResponse);
         // CustomSnackBar.success(result.message.success.first.toString());
         return result;
       }
     } catch (e) {
-      log.e(':ladybug::ladybug::ladybug: err from RecentViews api service ==> $e :ladybug::ladybug::ladybug:');
+      log.e(
+        ':ladybug::ladybug::ladybug: err from RecentViews api service ==> $e :ladybug::ladybug::ladybug:',
+      );
       CustomSnackBar.error('Something went Wrong!');
       return null;
     }
     return null;
   }
-
 }

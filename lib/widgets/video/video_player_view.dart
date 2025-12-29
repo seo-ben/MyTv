@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../main.dart';
 import '../../utils/basic_screen_imports.dart';
+import '../../utils/device_info.dart';
 
 class VideoPlayerView extends StatefulWidget {
   const VideoPlayerView({
@@ -35,15 +36,17 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
         _videoPlayerController = VideoPlayerController.asset(widget.url);
         break;
       case DataSourceType.network:
-        _videoPlayerController =
-            VideoPlayerController.networkUrl(Uri.parse(widget.url));
+        _videoPlayerController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.url),
+        );
         break;
       case DataSourceType.file:
         _videoPlayerController = VideoPlayerController.file(File(widget.url));
         break;
       case DataSourceType.contentUri:
-        _videoPlayerController =
-            VideoPlayerController.contentUri(Uri.parse(widget.url));
+        _videoPlayerController = VideoPlayerController.contentUri(
+          Uri.parse(widget.url),
+        );
         break;
     }
 
@@ -98,10 +101,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
             aspectRatio: _aspectRatio,
             child: KeyboardListener(
               autofocus: true,
-              focusNode: FocusNode(
-                debugLabel: "ssss",
-                canRequestFocus: true,
-              ),
+              focusNode: FocusNode(debugLabel: "ssss", canRequestFocus: true),
               onKeyEvent: (onKey) {
                 if (onKey is KeyDownEvent) {
                   if (onKey.logicalKey == LogicalKeyboardKey.exit) {
@@ -119,14 +119,16 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
                   } else if (onKey.logicalKey == LogicalKeyboardKey.arrowLeft) {
                     final currentPosition =
                         _chewieController.videoPlayerController.value.position;
-                    _chewieController
-                        .seekTo(currentPosition - const Duration(seconds: 10));
+                    _chewieController.seekTo(
+                      currentPosition - const Duration(seconds: 10),
+                    );
                   } else if (onKey.logicalKey ==
                       LogicalKeyboardKey.arrowRight) {
                     final currentPosition =
                         _chewieController.videoPlayerController.value.position;
-                    _chewieController
-                        .seekTo(currentPosition + const Duration(seconds: 10));
+                    _chewieController.seekTo(
+                      currentPosition + const Duration(seconds: 10),
+                    );
                   } else if (onKey.logicalKey == LogicalKeyboardKey.arrowUp) {
                     double newVolume =
                         (_chewieController.videoPlayerController.value.volume +
@@ -142,9 +144,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
                   }
                 }
               },
-              child: Chewie(
-                controller: _chewieController,
-              ),
+              child: Chewie(controller: _chewieController),
             ),
           ),
         ),
@@ -159,10 +159,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
               onPressed: () {
                 _chewieController.enterFullScreen();
               },
-              child: const Icon(
-                Icons.fullscreen,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.fullscreen, color: Colors.white),
             ),
           ),
         ),
@@ -177,10 +174,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
               onPressed: () {
                 _chewieController.enterFullScreen();
               },
-              child: const Icon(
-                Icons.fullscreen,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.fullscreen, color: Colors.white),
             ),
           ),
         ),

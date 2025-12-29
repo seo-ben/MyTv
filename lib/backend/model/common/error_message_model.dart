@@ -6,7 +6,16 @@ class ErrorResponse {
   late final Message message;
 
   ErrorResponse.fromJson(Map<String, dynamic> json) {
-    message = Message.fromJson(json['message']);
+    final m = json['message'];
+    if (m is Map<String, dynamic>) {
+      message = Message.fromJson(m);
+    } else if (m is List) {
+      // API sometimes returns message as a list of strings
+      message = Message(error: List<String>.from(m.map((e) => e.toString())));
+    } else {
+      // Fallback to empty message
+      message = Message(error: []);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -24,7 +33,12 @@ class Message {
   late final List<String> error;
 
   Message.fromJson(Map<String, dynamic> json) {
-    error = List.castFrom<dynamic, String>(json['error']);
+    final e = json['error'];
+    if (e is List) {
+      error = List<String>.from(e.map((x) => x.toString()));
+    } else {
+      error = [];
+    }
   }
 
   Map<String, dynamic> toJson() {

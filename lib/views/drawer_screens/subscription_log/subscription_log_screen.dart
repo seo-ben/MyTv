@@ -4,8 +4,7 @@ import '/backend/utils/custom_loading_api.dart';
 import '/widgets/logs/subscription_card_widget.dart';
 import '../../../controller/drawer/subscription_log/subscription_log_controller.dart';
 import '../../../utils/basic_screen_imports.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../../../admob/admob_helper.dart';
+import '../../../widgets/ads/unified_banner_ad_widget.dart';
 
 class SubscriptionLogScreen extends StatelessWidget {
   SubscriptionLogScreen({super.key});
@@ -76,7 +75,7 @@ class SubscriptionLogScreen extends StatelessWidget {
                   },
                 ),
         ),
-        // showAdd(context),
+        showAdd(context),
       ],
     );
   }
@@ -88,13 +87,7 @@ class SubscriptionLogScreen extends StatelessWidget {
         right: Dimensions.paddingHorizontalSize * .6,
         top: Dimensions.paddingVerticalSize * .5,
       ),
-      child: SizedBox(
-        height: 50,
-        child: AdWidget(
-          ad: AdMobHelper.getBannerAd()..load(),
-          key: UniqueKey(),
-        ),
-      ),
+      child: const UnifiedBannerAdWidget(),
     );
   }
 }

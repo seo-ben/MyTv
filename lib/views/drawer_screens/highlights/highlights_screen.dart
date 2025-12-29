@@ -4,6 +4,7 @@ import '../../../backend/services/api_endpoint.dart';
 import '../../../utils/basic_screen_imports.dart';
 import '../../video_player_screen.dart';
 import '../../youtube_video_player_screen.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 
 class HighlightsScreen extends StatelessWidget {
   HighlightsScreen({super.key});
@@ -21,15 +22,14 @@ class HighlightsScreen extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: CustomColor.whiteColor,
-          ),
+          icon: const Icon(Icons.arrow_back, color: CustomColor.whiteColor),
         ),
       ),
-      body: Obx(() => controller.isLoading
-          ? const CustomLoadingAPI()
-          : _bodyWidget(context)),
+      body: Obx(
+        () => controller.isLoading
+            ? const CustomLoadingAPI()
+            : _bodyWidget(context),
+      ),
     );
   }
 
@@ -61,7 +61,10 @@ class HighlightsScreen extends StatelessWidget {
                       name: data[index].name,
                       title: data[index].title,
                       description: data[index].description,
-                      id: data[index].id.toString(),
+                      id: normalizeAndLogId(
+                        data[index].id,
+                        source: 'highlights_screen',
+                      ),
                     ),
                   );
                 },
@@ -74,7 +77,8 @@ class HighlightsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                              "${ApiEndpoint.mainDomain}/$imagePath/${data[index].image}"),
+                            "${ApiEndpoint.mainDomain}/$imagePath/${data[index].image}",
+                          ),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(
@@ -89,12 +93,11 @@ class HighlightsScreen extends StatelessWidget {
                             vertical: Dimensions.heightSize * 0.3,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                CustomColor.primaryLightColor.withValues(alpha: 0.5),
+                            color: CustomColor.primaryLightColor.withValues(
+                              alpha: 0.5,
+                            ),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                Dimensions.radius,
-                              ),
+                              Radius.circular(Dimensions.radius),
                             ),
                           ),
                           child: Icon(
@@ -115,27 +118,37 @@ class HighlightsScreen extends StatelessWidget {
                           onTap: () {
                             if (data[index].link.contains("youtube")) {
                               debugPrint("🔴🟠🟢🔵🟣 ${data[index].link}");
-                              Get.to(YoutubeVideoPlayer(
-                                url: data[index].link,
-                                name: data[index].name,
-                                title: data[index].title,
-                                description: data[index].description,
-                                id: data[index].id.toString(),
-                              ));
+                              Get.to(
+                                YoutubeVideoPlayer(
+                                  url: data[index].link,
+                                  name: data[index].name,
+                                  title: data[index].title,
+                                  description: data[index].description,
+                                  id: normalizeAndLogId(
+                                    data[index].id,
+                                    source: 'highlights_screen',
+                                  ),
+                                ),
+                              );
                             } else {
                               debugPrint("🔴🟠🟢🔵🟣 ${data[index].link}");
                               Get.to(
                                 VideoPlayerScreen(
-                                    url: data[index].link,
-                                    name: data[index].name,
-                                    title: data[index].title,
-                                    description: data[index].description,
-                                    id: data[index].id.toString()),
+                                  url: data[index].link,
+                                  name: data[index].name,
+                                  title: data[index].title,
+                                  description: data[index].description,
+                                  id: normalizeAndLogId(
+                                    data[index].id,
+                                    source: 'highlights_screen',
+                                  ),
+                                ),
                               );
                             }
                           },
-                          splashColor:
-                              CustomColor.primaryLightColor.withValues(alpha: 0.3),
+                          splashColor: CustomColor.primaryLightColor.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                     ),

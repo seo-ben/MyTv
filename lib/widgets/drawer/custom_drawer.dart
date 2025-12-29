@@ -106,7 +106,7 @@ class CustomDrawer extends StatelessWidget {
         TitleHeading3Widget(
           text: isLoggedIn
               ? "${profileController.profileInfoModel.data.userInfo.firstname} ${profileController.profileInfoModel.data.userInfo.lastname}"
-              : "Télé-spectateur",
+              : "MyTV",
           fontSize: Dimensions.headingTextSize2,
         ),
         FittedBox(
@@ -154,20 +154,21 @@ class CustomDrawer extends StatelessWidget {
                 onTap: () => Get.toNamed('${item['route']}'),
               );
             }),
-        _drawerTileLanguageWidget(
-          context,
-          Icons.language,
-          Strings.language,
-          onTap: () {},
-        ),
+        // Language selector commented out as requested
+        // _drawerTileLanguageWidget(
+        //   context,
+        //   Icons.language,
+        //   Strings.language,
+        //   onTap: () {},
+        // ),
         _drawerTileWidget(
           context,
-          Icons.access_time_outlined,
-          Strings.privacyPolicy,
+          Icons.shield_outlined,
+          "Confidentialité",
           onTap: () {
             Get.to(
               WebPaymentScreen(
-                appBarName: Strings.privacyPolicy,
+                appBarName: "Politique de confidentialité",
                 webUri: "${ApiEndpoint.mainDomain}/link/privacy-policy",
                 subtitle: "",
               ),
@@ -176,12 +177,12 @@ class CustomDrawer extends StatelessWidget {
         ),
         _drawerTileWidget(
           context,
-          Icons.access_time_outlined,
-          Strings.termsOf,
+          Icons.description_outlined,
+          "CGU",
           onTap: () {
             Get.to(
               WebPaymentScreen(
-                appBarName: Strings.termsOf,
+                appBarName: "Conditions Générales d'Utilisation",
                 webUri: "${ApiEndpoint.mainDomain}/link/terms-of-service",
                 subtitle: "",
               ),
@@ -315,8 +316,8 @@ class CustomDrawer extends StatelessWidget {
               var width = MediaQuery.of(context).size.width;
               return Container(
                 width: width * 0.84,
-                margin: EdgeInsets.all(Dimensions.paddingSize * 0.5),
-                padding: EdgeInsets.all(Dimensions.paddingSize * 0.9),
+                margin: EdgeInsets.all(Dimensions.paddingSize * 0.7),
+                padding: EdgeInsets.all(Dimensions.paddingSize * 0.1),
                 decoration: BoxDecoration(
                   color: Get.isDarkMode
                       ? CustomColor.primaryBGDarkColor
@@ -333,38 +334,50 @@ class CustomDrawer extends StatelessWidget {
                     TitleHeading4Widget(text: Strings.logMessage.tr),
                     verticalSpace(Dimensions.heightSize * 1),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * .25,
-                            child: PrimaryButton(
-                              title: Strings.cancel.tr,
-                              onPressed: () {
-                                Get.back();
-                              },
-                              borderColor: CustomColor.blackColor,
-                              buttonColor: CustomColor.blackColor,
+                        // Bouton Annuler (Icone Close)
+                        InkWell(
+                          onTap: () => Get.back(),
+                          child: Container(
+                            padding: EdgeInsets.all(
+                              Dimensions.paddingSize * 0.4,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: CustomColor.blackColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              color: CustomColor.whiteColor,
+                              size: Dimensions.heightSize * 2.5,
                             ),
                           ),
                         ),
-                        horizontalSpace(Dimensions.widthSize),
-                        Expanded(
-                          child: Obx(
-                            () => controller.isSignOutLoading
-                                ? const CustomLoadingAPI()
-                                : SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .25,
-                                    child: PrimaryButton(
-                                      title: Strings.logOut.tr,
-                                      onPressed: () {
-                                        controller.signOutProcess();
-                                      },
-                                      borderColor:
-                                          CustomColor.primaryLightColor,
+                        horizontalSpace(Dimensions.widthSize * 3),
+                        // Bouton Déconnexion (Icone Logout)
+                        Obx(
+                          () => controller.isSignOutLoading
+                              ? const CustomLoadingAPI()
+                              : InkWell(
+                                  onTap: () {
+                                    controller.signOutProcess();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(
+                                      Dimensions.paddingSize * 0.4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: CustomColor.primaryLightColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.logout,
+                                      color: CustomColor.whiteColor,
+                                      size: Dimensions.heightSize * 2.5,
                                     ),
                                   ),
-                          ),
+                                ),
                         ),
                       ],
                     ),

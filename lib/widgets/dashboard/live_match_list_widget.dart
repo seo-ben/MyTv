@@ -1,8 +1,11 @@
 import '/utils/tablet_check.dart';
+import '/utils/device_info.dart';
 import '../../backend/model/dashboard/home_info_model.dart';
 import '../../utils/basic_screen_imports.dart';
 import '../../views/video_player_screen.dart';
 import '../../views/youtube_video_player_screen.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
+import '../tv/focusable_widget.dart';
 
 // ignore: must_be_immutable
 class LiveMatchListWidget extends StatelessWidget {
@@ -31,8 +34,9 @@ class LiveMatchListWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: sport.length,
             itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
+              return FocusableWidget(
+                autofocus: index == 0 && DeviceInfo.isTv,
+                onPressed: () {
                   // Logic for all users (guests included)
                   // final controller = Get.find<DashboardController>();
                   // Note: Removed premium check logic for now as requested for guest access,
@@ -49,6 +53,8 @@ class LiveMatchListWidget extends StatelessWidget {
                     _navigateToPlayer(sport[index]);
                   }
                 },
+                focusColor: CustomColor.primaryLightColor,
+                borderRadius: BorderRadius.circular(Dimensions.radius * 0.75),
                 child: Container(
                   margin: EdgeInsets.only(right: Dimensions.widthSize * 0.5),
                   width: MediaQuery.sizeOf(context).width * 0.32,
@@ -76,7 +82,9 @@ class LiveMatchListWidget extends StatelessWidget {
                             ),
                             child: Icon(
                               Icons.star,
-                              size: Dimensions.iconSizeSmall * 1.25,
+                              size: DeviceInfo.isTv
+                                  ? Dimensions.iconSizeSmall * 0.9
+                                  : Dimensions.iconSizeSmall * 1.25,
                               color: CustomColor.whiteColor,
                             ),
                           ),
@@ -101,7 +109,9 @@ class LiveMatchListWidget extends StatelessWidget {
         words.first,
         style: CustomStyle.lightHeading4TextStyle.copyWith(
           fontWeight: FontWeight.w500,
-          fontSize: Dimensions.headingTextSize3,
+          fontSize: DeviceInfo.isTv
+              ? Dimensions.headingTextSize3 * 0.7
+              : Dimensions.headingTextSize3,
         ),
       );
     }
@@ -114,14 +124,18 @@ class LiveMatchListWidget extends StatelessWidget {
         text: "$firstWord ",
         style: CustomStyle.lightHeading4TextStyle.copyWith(
           fontWeight: FontWeight.w500,
-          fontSize: Dimensions.headingTextSize3,
+          fontSize: DeviceInfo.isTv
+              ? Dimensions.headingTextSize3 * 0.7
+              : Dimensions.headingTextSize3,
         ),
         children: [
           TextSpan(
             text: remaining,
             style: CustomStyle.lightHeading4TextStyle.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: Dimensions.headingTextSize3,
+              fontSize: DeviceInfo.isTv
+                  ? Dimensions.headingTextSize3 * 0.7
+                  : Dimensions.headingTextSize3,
               color: CustomColor.primaryLightColor,
             ),
           ),
@@ -139,7 +153,7 @@ class LiveMatchListWidget extends StatelessWidget {
           name: sportItem.name,
           title: sportItem.title,
           description: sportItem.description,
-          id: sportItem.id.toString(),
+          id: normalizeAndLogId(sportItem.id, source: 'live_match_list_widget'),
         ),
       );
     } else {
@@ -150,7 +164,7 @@ class LiveMatchListWidget extends StatelessWidget {
           name: sportItem.name,
           title: sportItem.title,
           description: sportItem.description,
-          id: sportItem.id.toString(),
+          id: normalizeAndLogId(sportItem.id, source: 'live_match_list_widget'),
         ),
       );
     }

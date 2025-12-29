@@ -6,8 +6,7 @@ import '/backend/utils/custom_loading_api.dart';
 import '/utils/basic_screen_imports.dart';
 import '/widgets/text_labels/title_heading5_widget.dart';
 import '../controller/video/video_player_controller.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../admob/admob_helper.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class YoutubeVideoPlayer extends StatefulWidget {
   YoutubeVideoPlayer({
@@ -36,6 +35,11 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
       initialVideoId: widget.url.split('=').last, // Example video ID
       flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
     );
+    WakelockPlus.enable(); // Activer le maintien de l'allumage de l'écran
+    debugPrint(
+      '▶️ YoutubeVideoPlayer.initState id=${widget.id} url=${widget.url}',
+    );
+    debugPrint(StackTrace.current.toString());
   }
 
   @override
@@ -139,20 +143,7 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
   }
 
   Padding showAdd(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: Dimensions.paddingHorizontalSize * .6,
-        right: Dimensions.paddingHorizontalSize * .6,
-        top: Dimensions.paddingVerticalSize * .5,
-      ),
-      child: SizedBox(
-        height: 250,
-        child: AdWidget(
-          ad: AdMobHelper.getLargeBannerAd()..load(),
-          key: UniqueKey(),
-        ),
-      ),
-    );
+    return const Padding(padding: EdgeInsets.zero, child: SizedBox.shrink());
   }
 
   /// Modified Button Section with "Add to My List" and "Share Now" Buttons
@@ -189,6 +180,7 @@ class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
   @override
   void dispose() {
     _controller.dispose();
+    WakelockPlus.disable(); // Désactiver le maintien de l'allumage de l'écran
     super.dispose();
   }
 }

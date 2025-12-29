@@ -6,65 +6,116 @@ import '../../../utils/dimensions.dart';
 
 class CustomSnackBar {
   static success(String message) {
-    return Get.snackbar(
-      'success',
-      message,
-      margin: EdgeInsets.symmetric(
-          horizontal: Dimensions.paddingSize * 0.5,
-          vertical: Dimensions.paddingSize * 0.5),
-      backgroundColor: CustomColor.greenColor,
-      colorText: CustomColor.whiteColor,
-      leftBarIndicatorColor:
-          const Color.fromARGB(255, 8, 118, 6).withValues(alpha: 0.5),
-      progressIndicatorBackgroundColor: CustomColor.redColor,
-      isDismissible: true,
-      animationDuration: const Duration(seconds: 1),
-      snackPosition: SnackPosition.BOTTOM,
-      borderRadius: 5.0,
-      mainButton: TextButton(
-        onPressed: () {
-          Get.back();
-          // Get.close(0);
-        },
-        child: const Text(
-          "Dismiss",
-          style: TextStyle(color: CustomColor.whiteColor),
+    return Get.dialog(
+      AlertDialog(
+        backgroundColor: CustomColor.greenColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSize,
+          vertical: Dimensions.paddingSize * 0.8,
+        ),
+        content: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: CustomColor.whiteColor.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check, color: Colors.white),
+            ),
+            SizedBox(width: Dimensions.widthSize * 0.7),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Success',
+                    style: TextStyle(
+                      color: CustomColor.whiteColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.heightSize * 0.3),
+                  Text(
+                    message,
+                    style: TextStyle(color: CustomColor.whiteColor),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('OK', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
-      icon: const Icon(
-        Icons.check_circle_rounded,
-        color: CustomColor.whiteColor,
-      ),
+      barrierDismissible: true,
     );
   }
 
   static error(String message) {
-    return Get.snackbar('alert', message,
-        margin: EdgeInsets.symmetric(
-          horizontal: Dimensions.paddingSize * 0.5,
-          vertical: Dimensions.paddingSize * 0.5,
+    return Get.dialog(
+      AlertDialog(
+        backgroundColor: CustomColor.redColor.withValues(alpha: 0.9),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
-        backgroundColor: CustomColor.redColor.withValues(alpha: 0.8),
-        colorText: CustomColor.whiteColor,
-        leftBarIndicatorColor: CustomColor.redColor,
-        progressIndicatorBackgroundColor: CustomColor.redColor,
-        isDismissible: true,
-        animationDuration: const Duration(seconds: 1),
-        snackPosition: SnackPosition.BOTTOM,
-        borderRadius: 5.0,
-        mainButton: TextButton(
-          onPressed: () {
-            Get.back();
-            // Get.close(1);
-          },
-          child: const Text(
-            "Dismiss",
-            style: TextStyle(color: CustomColor.whiteColor),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSize,
+          vertical: Dimensions.paddingSize * 0.8,
+        ),
+        content: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: CustomColor.whiteColor.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.error_outline, color: Colors.white),
+            ),
+            SizedBox(width: Dimensions.widthSize * 0.7),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Error',
+                    style: TextStyle(
+                      color: CustomColor.whiteColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.heightSize * 0.3),
+                  Text(
+                    message,
+                    style: TextStyle(color: CustomColor.whiteColor),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('OK', style: TextStyle(color: Colors.white)),
           ),
-        ),
-        icon: const Icon(
-          Icons.warning,
-          color: CustomColor.redColor,
-        ));
+        ],
+      ),
+      barrierDismissible: true,
+    );
   }
 }

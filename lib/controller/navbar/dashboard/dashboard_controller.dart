@@ -9,6 +9,7 @@ import '../../../backend/model/dashboard/my_subscription_info_model.dart'
 import '../../../backend/model/details/details_model.dart';
 import '../../../backend/services/dashboard/dashboard_services.dart';
 import '../../../backend/services/video/video_services.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 import '../../../backend/utils/api_method.dart';
 import '../../../utils/basic_screen_imports.dart';
 import '../../../views/video_player_screen.dart';
@@ -91,7 +92,9 @@ class DashboardController extends GetxController {
 
     await DashboardServices.getHomeInfoApi(newLanguage)
         .then((value) {
-          _homeInfoModel = value!;
+          if (value != null) {
+            _homeInfoModel = value;
+          }
 
           _isLoading.value = false;
           update();
@@ -142,7 +145,7 @@ class DashboardController extends GetxController {
                 name: data.name,
                 title: data.title,
                 description: data.description,
-                id: "",
+                id: normalizeAndLogId(data.key, source: 'dashboard_controller'),
               ),
             );
           } else {
@@ -153,7 +156,7 @@ class DashboardController extends GetxController {
                 name: data.name,
                 title: data.title,
                 description: data.description,
-                id: "",
+                id: normalizeAndLogId(data.key, source: 'dashboard_controller'),
               ),
             );
           }
@@ -191,18 +194,20 @@ class DashboardController extends GetxController {
 
     await DashboardServices.getSubscriptionInfoApi(newLanguage)
         .then((value) {
-          _subscriptionInfoModel = value!;
+          if (value != null) {
+            _subscriptionInfoModel = value;
 
-          var data = _subscriptionInfoModel.data;
-          if (data.isEmpty) {
-            isPremium.value = false;
-          } else {
-            for (var item in data) {
-              if (item.status == true) {
-                isPremium.value = true;
-                break;
-              } else {
-                isPremium.value = false;
+            var data = _subscriptionInfoModel.data;
+            if (data.isEmpty) {
+              isPremium.value = false;
+            } else {
+              for (var item in data) {
+                if (item.status == true) {
+                  isPremium.value = true;
+                  break;
+                } else {
+                  isPremium.value = false;
+                }
               }
             }
           }

@@ -33,8 +33,10 @@ class SignInController extends GetxController {
 
     await AuthApiServices.signInProcessApi(body: inputBody)
         .then((value) {
-          _signInModel = value!;
-          _saveDataLocalStorage();
+          if (value != null) {
+            _signInModel = value;
+            _saveDataLocalStorage();
+          }
           _isLoading.value = false;
           update();
         })
@@ -111,9 +113,11 @@ class SignInController extends GetxController {
 
     await AuthApiServices.signOutProcessApi()
         .then((value) {
-          _signOutModel = value!;
-          LocalStorage.signOut();
-          Get.offAllNamed(Routes.signInScreen);
+          if (value != null) {
+            _signOutModel = value;
+            LocalStorage.signOut();
+            Get.offAllNamed(Routes.signInScreen);
+          }
           _isSignOutLoading.value = false;
           update();
         })

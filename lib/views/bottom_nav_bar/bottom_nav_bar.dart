@@ -115,27 +115,54 @@ class BottomNavBarScreen extends StatelessWidget {
   BottomAppBar _bottomNavBarWidget(BuildContext context) {
     return BottomAppBar(
       color: CustomColor.bottomNavBoxColor,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          BottomItemWidget(
-            icon: Assets.icons.home,
-            label: Strings.home,
-            index: 0,
+      height: 60.h,
+      padding: EdgeInsets.zero,
+      elevation: 10,
+      notchMargin: 0,
+      clipBehavior: Clip.antiAlias,
+      shape: const AutomaticNotchedShape(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-
-          BottomItemWidget(
-            icon: Assets.icons.notifications,
-            label: Strings.notification,
-            index: 1,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: CustomColor.bottomNavBoxColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-          BottomItemWidget(
-            icon: Assets.icons.person,
-            label: Strings.profile,
-            index: 2,
+          border: Border(
+            top: BorderSide(
+              color: CustomColor.whiteColor.withOpacity(0.05),
+              width: 1,
+            ),
           ),
-        ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            BottomItemWidget(
+              icon: Assets.icons.home,
+              label: Strings.home,
+              index: 0,
+            ),
+            BottomItemWidget(
+              icon: Assets.icons.notifications,
+              label: Strings.notification,
+              index: 1,
+            ),
+            BottomItemWidget(
+              icon: Assets.icons.person,
+              label: Strings.profile,
+              index: 2,
+            ),
+          ],
+        ),
       ),
     );
   }

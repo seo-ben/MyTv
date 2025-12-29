@@ -23,31 +23,57 @@ class BottomItemWidget extends StatelessWidget {
       child: Obx(
         () => Container(
           padding: EdgeInsets.symmetric(horizontal: Dimensions.widthSize),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              SvgPicture.asset(
-                icon ?? "",
-                height: 18.h,
-                width: 18.w,
-                // ignore: deprecated_member_use
-                color: controller.selectedIndex.value == index
-                    ? CustomColor.primaryLightColor
-                    : CustomColor.boxColor,
-              ),
-              verticalSpace(Dimensions.heightSize * 0.5),
-              Text(
-                Get.find<LanguageController>().getTranslation(label),
-                style: GoogleFonts.montserrat(
-                  fontSize: Dimensions.headingTextSize6,
-                  fontWeight: controller.selectedIndex.value == index
-                      ? FontWeight.w600
-                      : FontWeight.w500,
-                  color: controller.selectedIndex.value == index
-                      ? CustomColor.secondaryLightColor
-                      : CustomColor.boxColor,
+              // Animated Indicator line at the top
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                top: 0,
+                child: Container(
+                  height: 3.h,
+                  width: controller.selectedIndex.value == index ? 20.w : 0,
+                  decoration: BoxDecoration(
+                    color: CustomColor.primaryLightColor,
+                    borderRadius: BorderRadius.circular(Dimensions.radius),
+                    boxShadow: [
+                      BoxShadow(
+                        color: CustomColor.primaryLightColor.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  verticalSpace(Dimensions.heightSize * 0.2),
+                  SvgPicture.asset(
+                    icon ?? "",
+                    height: 18.h,
+                    width: 18.w,
+                    // ignore: deprecated_member_use
+                    color: controller.selectedIndex.value == index
+                        ? CustomColor.primaryLightColor
+                        : CustomColor.boxColor.withOpacity(0.7),
+                  ),
+                  verticalSpace(Dimensions.heightSize * 0.3),
+                  Text(
+                    Get.find<LanguageController>().getTranslation(label),
+                    style: GoogleFonts.montserrat(
+                      fontSize: Dimensions.headingTextSize6 * 0.9,
+                      fontWeight: controller.selectedIndex.value == index
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      color: controller.selectedIndex.value == index
+                          ? CustomColor.whiteColor
+                          : CustomColor.boxColor.withOpacity(0.7),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

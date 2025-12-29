@@ -1,9 +1,9 @@
 import '/backend/services/api_endpoint.dart';
 import '/backend/utils/custom_loading_api.dart';
 import '../../controller/drawer/watch_list/watch_list_screen_controller.dart';
+import 'package:MyTelevision/helpers/id_utils.dart';
 import '../../utils/basic_screen_imports.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../../../admob/admob_helper.dart';
+import '../../../widgets/ads/unified_banner_ad_widget.dart';
 
 class WatchListScreen extends StatelessWidget {
   WatchListScreen({super.key});
@@ -49,7 +49,12 @@ class WatchListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        controller.getDetailsProcess(data[index].id.toString());
+                        controller.getDetailsProcess(
+                          normalizeAndLogId(
+                            data[index].id,
+                            source: 'watch_list_screen',
+                          ),
+                        );
                       },
                       child: Stack(
                         children: [
@@ -99,7 +104,10 @@ class WatchListScreen extends StatelessWidget {
                                 ),
                                 onTap: () {
                                   controller.getDetailsProcess(
-                                    data[index].id.toString(),
+                                    normalizeAndLogId(
+                                      data[index].id,
+                                      source: 'watch_list_screen',
+                                    ),
                                   );
                                 },
                                 splashColor: CustomColor.primaryLightColor
@@ -113,7 +121,10 @@ class WatchListScreen extends StatelessWidget {
                             child: InkWell(
                               onTap: () {
                                 controller.watchListDeleteProcess(
-                                  data[index].id.toString(),
+                                  normalizeAndLogId(
+                                    data[index].id,
+                                    source: 'watch_list_screen',
+                                  ),
                                 );
                               },
                               child: Container(
@@ -146,7 +157,7 @@ class WatchListScreen extends StatelessWidget {
                   ),
                 ),
         ),
-        // showAdd(context),
+        showAdd(context),
       ],
     );
   }
@@ -158,13 +169,7 @@ class WatchListScreen extends StatelessWidget {
         right: Dimensions.paddingHorizontalSize * .6,
         top: Dimensions.paddingVerticalSize * .5,
       ),
-      child: SizedBox(
-        height: 50,
-        child: AdWidget(
-          ad: AdMobHelper.getBannerAd()..load(),
-          key: UniqueKey(),
-        ),
-      ),
+      child: const UnifiedBannerAdWidget(),
     );
   }
 }
